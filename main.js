@@ -49,20 +49,31 @@ function iniFlash() {
 	if ($$('app')) $$('app').destructor();
 	dhx.ready(dhx.ui({ id: 'app', view: 'layout', height: 482, width: 321, rows: rows }));
 }
-function main() {
-	window.context="WebBrowser ?";
-	dhx.ajax(window.serverside+'sessions/init.php', function(text) {
+var app = {
+    // Application Constructor
+    initialize: function() { this.bindEvents();  },
+    bindEvents: function() {
+        window.context="WebBrowser ?";
+		document.addEventListener('deviceready', this.onDeviceReady, false);
+		dhx.ajax(window.serverside+'sessions/init.php', this.onSessionInit);
+    },
+    // deviceready Event Handler
+    onDeviceReady: function() {
+		alert('device ready !');
+		window.context="smartApp";
+		iniFlash();
+    },
+	onSessionInit:function(text) {
 		var data;
 		alert(text);
 		eval("data="+text);
 		window.idsession=data.idsession;
 		iniFlash();
-	});
-	document.addEventListener('deviceready', function() {
-		alert('device ready !');
-		window.context="smartApp";
-		iniFlash();
-	}, false);
+	}
+};
+
+function main() {
+	app.initialize();
 	iniFlash();
 }
 function Entree() {
