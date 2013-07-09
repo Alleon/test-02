@@ -32,9 +32,17 @@ function liste_eleves() {
 function iniFlash() {
 	var rows=[];
 	rows.push({ view: 'label'		, label: 'Initialisation' });
-	if (window.idsession && !windows.iduser) {
-		rows.push({ view: 'label'		, label: 'Session initialisée, non connectée' });
+	if (window.idsession && window.iduser) {
+		rows.push({ view: 'label'	, label: 'Session initialisée, connectée.' });
+		rows.push({ view: 'button'	, label: 'réInitialiser', type:'prev', click: 'main()'});
+	}
+	else if (window.idsession) {
+		rows.push({ view: 'label'	, label: 'Session initialisée, non connectée' });
 		rows.push({ view: 'button'	, label: 'Connection', type:'next', click: 'connection()'});
+	}
+	else {
+		rows.push({ view: 'label'	, label: 'Session non initialisée' });
+		rows.push({ view: 'button'	, label: 'réessayer', type:'prev', click: 'main()'});
 	}
 	rows.push( { view: 'label'		, label: 'Appareil: '+window.context });
 	rows.push( { view: 'button'	, label: 'simulation', click: 'Entree()'});
