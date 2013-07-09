@@ -30,25 +30,33 @@ function liste_eleves() {
 	};
 }
 function iniFlash() {
-	dhx.ready(dhx.ui({ id: 'app', view: 'layout', height: 482, width: 321,
-		rows: [	
-			{ view: 'label'		, label: 'Initialisation' },
-			{ view: 'label'		, label: 'Session: '+(window.idsession ? "ouverte" : "en attente")},
-			{ view: 'label'		, label: 'Appareil: '+window.context },
-			{ view: 'button'	, label: 'simulation', click: 'Entree()'}
-		] }
-	));
+	var rows=[];
+	rows.push({ view: 'label'		, label: 'Initialisation' });
+	if (window.idsession && !windows.iduser) {
+		rows.push({ view: 'label'		, label: 'Session initialisée, non connectée' });
+		rows.push({ view: 'button'	, label: 'Connection', type:'next', click: 'connection()'});
+	}
+	rows.push( { view: 'label'		, label: 'Appareil: '+window.context });
+	rows.push( { view: 'button'	, label: 'simulation', click: 'Entree()'});
+	dhx.ready(dhx.ui({ id: 'app', view: 'layout', height: 482, width: 321, rows: rows }));
 }
 function main() {
 	if ($$('app')) $$('app').destructor();
 	window.context="WebBrowser ?";
+	dhx.ajax('http://webservices.ecf-services.fr/sessions/init.php', function(text) {
+		var data;
+		alert(text);
+		eval("data="+text);
+		window.idsession=data.idsession;
+		iniFlash();
+	});
 	document.addEventListener('deviceready', function() {
+		alert('device ready !');
 		window.context="smartApp";
 		iniFlash();
 	}, false);
 	iniFlash();
 }
-
 function Entree() {
 	if ($$('app')) $$('app').destructor();
 	dhx.ui({ id: 'app', view: 'layout', height: 482, width: 321,
