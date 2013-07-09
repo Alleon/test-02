@@ -46,12 +46,12 @@ function iniFlash() {
 	}
 	rows.push( { view: 'label'		, label: 'Appareil: '+window.context });
 	rows.push( { view: 'button'	, label: 'simulation', click: 'Entree()'});
+	if ($$('app')) $$('app').destructor();
 	dhx.ready(dhx.ui({ id: 'app', view: 'layout', height: 482, width: 321, rows: rows }));
 }
 function main() {
-	if ($$('app')) $$('app').destructor();
 	window.context="WebBrowser ?";
-	dhx.ajax('http://webservices.ecf-services.fr/sessions/init.php', function(text) {
+	dhx.ajax(window.serverside+'sessions/init.php', function(text) {
 		var data;
 		alert(text);
 		eval("data="+text);
