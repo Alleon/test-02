@@ -44,6 +44,10 @@ function iniFlash() {
 		rows.push({ view: 'label'	, label: 'Session non initialisée' });
 		rows.push({ view: 'button'	, label: 'réessayer', type:'prev', click: 'main()'});
 	}
+	rows.push( { view: 'label'		, label: 'nav.appCodeName: '+navigator.appCodeName });
+	rows.push( { view: 'label'		, label: 'nav.appName: '+navigator.appName });
+	rows.push( { view: 'label'		, label: 'nav.platform: '+navigator.platform });
+	rows.push( { view: 'label'		, label: 'nav.userAgent: '+navigator.userAgent });
 	rows.push( { view: 'label'		, label: 'Appareil: '+window.context });
 	rows.push( { view: 'button'	, label: 'simulation', click: 'Entree()'});
 	if ($$('app')) $$('app').destructor();
@@ -54,7 +58,8 @@ var app = {
     initialize: function() { this.bindEvents();  },
     bindEvents: function() {
         window.context="WebBrowser ?";
-		document.addEventListener('deviceready', this.onDeviceReady, false);
+		var x=document.addEventListener('deviceready', this.onDeviceReady, false);
+		alert(x);
 		dhx.ajax(window.serverside+'sessions/init.php', this.onSessionInit);
     },
     // deviceready Event Handler
@@ -68,6 +73,7 @@ var app = {
 		alert(text);
 		eval("data="+text);
 		window.idsession=data.idsession;
+		checkConnection();
 		iniFlash();
 	}
 };
@@ -131,4 +137,16 @@ function connection() {
 					}
 				]
 	}	);
+}
+function checkConnection() {
+	var networkState = navigator.network.connection.type;
+	var states = {};
+	states[Connection.UNKNOWN]  = 'Connexion inconnue';
+	states[Connection.ETHERNET] = 'Connexion Ethernet';
+	states[Connection.WIFI]     = 'Connexion WiFi';
+	states[Connection.CELL_2G]  = 'Connexion cellulaire 2G';
+	states[Connection.CELL_3G]  = 'Connexion cellulaire 3G';
+	states[Connection.CELL_4G]  = 'Connexion cellulaire 4G';
+	states[Connection.NONE]     = 'Pas de connexion réseau';
+	alert('Type de connexion : ' + states[networkState], "<hr />");
 }
